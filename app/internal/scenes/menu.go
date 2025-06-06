@@ -15,7 +15,7 @@ func (s Menu) Run() {
 		Buttons: []window.Button{
 			{
 				Label:    "Start",
-				Callback: s.Run,
+				Callback: Game{}.Run,
 			},
 			{
 				Label:    "Back",

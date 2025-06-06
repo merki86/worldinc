@@ -22,12 +22,12 @@ func (s Greeting) Run() {
 				Callback: func() { os.Exit(0) },
 			},
 		},
-		ContentCallback: callback,
+		ContentCallback: greetingCallback,
 	}
 	window.New()
 }
 
-func callback() {
+func greetingCallback() {
 	fmt.Println(
 		"Welcome to World Inc! This is a remastered demo of my original game back in 2020.\n",
 		"It was originally written in pygame, but was soon abandoned due to lack of my skills.\n",
