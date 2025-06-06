@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	scenes.Menu{}.Run()
+	scenes.Greeting{}.Run()
 }

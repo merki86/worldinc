@@ -6,9 +6,9 @@ import (
 )
 
 type Window struct {
-	Title   string
-	Message string
-	Buttons []Button
+	Title           string
+	ContentCallback func()
+	Buttons         []Button
 }
 
 type Button struct {
@@ -18,7 +18,7 @@ type Button struct {
 
 func (w Window) New() {
 	drawHeader(w.Title, w.Buttons) // Print header of the window
-	drawMessage(w.Message)
+	w.ContentCallback()
 	handleAction(w.Buttons)
 }
 
@@ -37,10 +37,6 @@ func drawHeader(title string, buttons []Button) {
 	header := strings.Join([]string{upperBorder, content, downBorder}, "\n") + "\n"
 
 	fmt.Printf("%v", header)
-}
-
-func drawMessage(message string) {
-	fmt.Println(message)
 }
 
 func handleAction(buttons []Button) {

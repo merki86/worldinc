@@ -11,22 +11,22 @@ type Menu struct{}
 func (s Menu) Run() {
 	fmt.Println("Menu initialized")
 	window := window.Window{
-		Title:   "World Inc.",
-		Message: "Welcome to World Inc! This is a remastered demo of my original game back in 2020.",
+		Title: "World Inc.",
 		Buttons: []window.Button{
 			{
 				Label:    "Start",
 				Callback: s.Run,
 			},
 			{
-				Label:    "Restart",
-				Callback: s.Run,
+				Label:    "Back",
+				Callback: Greeting{}.Run,
 			},
 			{
 				Label:    "Quit",
 				Callback: func() { os.Exit(0) },
 			},
 		},
+		ContentCallback: func() {},
 	}
 	window.New()
 }
