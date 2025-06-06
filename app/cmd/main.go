@@ -1,9 +1,9 @@
 package main
 
 import (
-	"worldinc/app/internal/app"
+	"worldinc/app/internal/scenes"
 )
 
 func main() {
-	app.Run()
+	scenes.Menu{}.Run()
 }
