@@ -16,25 +16,37 @@ type GameState struct {
 	// Logs  []string
 }
 
-type gameScene struct{}
-
-func (g gameScene) Draw() {
-	os.Exit(0)
+type gameScene struct {
+	next model.Scene
 }
 
-func (g gameScene) EventHandler(s tcell.Screen) {
-	for {
-		event := s.PollEvent()
-		switch event := event.(type) {
-		case *tcell.EventKey:
-			game.Mutex.Lock()
-			switch event.Key() {
-			case tcell.KeyEscape:
-				// game.CurrentScene = gameScene.Next()
-				gameScene{}.Draw()
-			}
-			game.Mutex.Unlock()
+func NewGameScene() *gameScene {
+	return &gameScene{}
+}
+
+func (g *gameScene) Update() {
+	// Update
+}
+
+func (g *gameScene) Draw(s tcell.Screen) {
+	// Draw
+}
+
+func (g *gameScene) Next() model.Scene {
+	return g.next
+}
+
+func (g *gameScene) EventHandler(s tcell.Screen) {
+	event := s.PollEvent()
+	switch event := event.(type) {
+	case *tcell.EventKey:
+		game.Mutex.Lock()
+		switch event.Key() {
+		case tcell.KeyEscape:
+			// game.CurrentScene = gameScene.Next()
+			os.Exit(0)
 		}
+		game.Mutex.Unlock()
 	}
 }
 
@@ -60,8 +72,15 @@ func main() {
 	screen.Init()
 	defer screen.Fini()
 
-	go gameScene{}.EventHandler(screen)
-	// go logicLoop()
+	var current model.Scene = NewGameScene()
+
 	for {
+		current.Update()
+		current.Draw(screen)
+		current.EventHandler(screen)
+
+		if next := current.Next(); next != nil {
+			current = next
+		}
 	}
 }

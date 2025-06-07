@@ -5,7 +5,7 @@ import "github.com/gdamore/tcell/v2"
 type Scene interface {
 	Update()
 	Draw(s tcell.Screen)
-	EventHandler(ev tcell.Event)
+	EventHandler(s tcell.Screen)
 	Next() Scene
 }
 
