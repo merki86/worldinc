@@ -22,6 +22,22 @@ func (g gameScene) Draw() {
 	os.Exit(0)
 }
 
+func (g gameScene) EventHandler(s tcell.Screen) {
+	for {
+		event := s.PollEvent()
+		switch event := event.(type) {
+		case *tcell.EventKey:
+			game.Mutex.Lock()
+			switch event.Key() {
+			case tcell.KeyEscape:
+				// game.CurrentScene = gameScene.Next()
+				gameScene{}.Draw()
+			}
+			game.Mutex.Unlock()
+		}
+	}
+}
+
 var game = GameState{
 	World: model.World{
 		Population: 5000,
@@ -44,26 +60,8 @@ func main() {
 	screen.Init()
 	defer screen.Fini()
 
-	go inputLoop(screen)
+	go gameScene{}.EventHandler(screen)
 	// go logicLoop()
-	// renderLoop(screen)
 	for {
-
-	}
-}
-
-func inputLoop(s tcell.Screen) {
-	for {
-		event := s.PollEvent()
-		switch event := event.(type) {
-		case *tcell.EventKey:
-			game.Mutex.Lock()
-			switch event.Key() {
-			case tcell.KeyEscape:
-				// game.CurrentScene = gameScene.Next()
-				gameScene{}.Draw()
-			}
-			game.Mutex.Unlock()
-		}
 	}
 }
