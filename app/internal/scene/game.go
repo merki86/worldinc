@@ -3,6 +3,7 @@ package scene
 import (
 	"os"
 	"worldinc/app/internal/model"
+	"worldinc/app/pkg/print"
 
 	"github.com/gdamore/tcell/v2"
 )
@@ -15,12 +16,15 @@ func NewGameScene() *gameScene {
 	return &gameScene{}
 }
 
+var textPos int = 0
+
 func (g *gameScene) Update() {
-	// Update
+	textPos++
 }
 
 func (g *gameScene) Draw(s tcell.Screen) {
-	s.SetContent(0, 0, '5', []rune{'a', 's', 'a', 'p', '!'}, tcell.StyleDefault)
+	s.Clear()
+	print.Print(s, textPos, 1, "Hewoo")
 	s.Show()
 }
 
