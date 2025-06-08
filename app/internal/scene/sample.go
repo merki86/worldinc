@@ -19,16 +19,14 @@ func NewSampleScene(game *model.GameState) *sampleScene {
 }
 
 func (g *sampleScene) Update() {
-	for {
-	}
 	// Update
 }
 
 func (g *sampleScene) Draw(s tcell.Screen) {
-	for {
-		s.Fill('s', tcell.StyleDefault)
-		s.Show()
-	}
+
+	s.Fill('s', tcell.StyleDefault)
+	s.Show()
+
 }
 
 func (g *sampleScene) Next() model.Scene {
@@ -36,19 +34,19 @@ func (g *sampleScene) Next() model.Scene {
 }
 
 func (g *sampleScene) HandleEvent(s tcell.Screen) {
-	for {
-		event := s.PollEvent()
-		switch event := event.(type) {
-		case *tcell.EventKey:
-			g.game.Mutex.Lock()
-			switch event.Key() {
-			case tcell.KeyEscape:
-				os.Exit(0)
-			case tcell.KeyEnter:
-				g.next = NewGameScene(g.game)
 
-			}
-			g.game.Mutex.Unlock()
+	event := s.PollEvent()
+	switch event := event.(type) {
+	case *tcell.EventKey:
+		g.game.Mutex.Lock()
+		switch event.Key() {
+		case tcell.KeyEscape:
+			os.Exit(0)
+		case tcell.KeyEnter:
+			g.next = NewGameScene(g.game)
+
 		}
+		g.game.Mutex.Unlock()
 	}
+
 }

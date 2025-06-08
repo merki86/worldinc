@@ -2,7 +2,6 @@ package scene
 
 import (
 	"os"
-	"time"
 	"worldinc/app/internal/model"
 	"worldinc/app/pkg/print"
 
@@ -23,23 +22,23 @@ func NewGameScene(game *model.GameState) *gameScene {
 var textPos int = 0
 
 func (g *gameScene) Update() {
-	for {
-		g.game.Mutex.Lock()
-		textPos++
-		g.game.Mutex.Unlock()
 
-		time.Sleep(100 * time.Millisecond)
-	}
+	// g.game.Mutex.Lock()
+	textPos++
+	// g.game.Mutex.Unlock()
+
+	// time.Sleep(100 * time.Millisecond)
+
 }
 
 func (g *gameScene) Draw(s tcell.Screen) {
-	for {
-		g.game.Mutex.Lock()
-		s.Clear()
-		print.Print(s, textPos, 1, "Hewoo")
-		s.Show()
-		g.game.Mutex.Unlock()
-	}
+
+	// g.game.Mutex.Lock()
+	s.Clear()
+	print.Print(s, textPos, 1, "Hewoo")
+	s.Show()
+	// g.game.Mutex.Unlock()
+
 }
 
 func (g *gameScene) Next() model.Scene {
@@ -47,18 +46,18 @@ func (g *gameScene) Next() model.Scene {
 }
 
 func (g *gameScene) HandleEvent(s tcell.Screen) {
-	for {
-		event := s.PollEvent()
-		switch event := event.(type) {
-		case *tcell.EventKey:
-			g.game.Mutex.Lock()
-			switch event.Key() {
-			case tcell.KeyEscape:
-				os.Exit(0)
-			case tcell.KeyEnter:
-				g.next = NewSampleScene(g.game)
-			}
-			g.game.Mutex.Unlock()
+
+	event := s.PollEvent()
+	switch event := event.(type) {
+	case *tcell.EventKey:
+		// game.Mutex.Lock()
+		switch event.Key() {
+		case tcell.KeyEscape:
+			os.Exit(0)
+		case tcell.KeyEnter:
+			g.next = NewSampleScene(g.game)
 		}
+		// game.Mutex.Unlock()
+
 	}
 }

@@ -31,11 +31,10 @@ func main() {
 
 	var current model.Scene = scene.NewGameScene(&game)
 
-	go current.Update()
-	go current.Draw(screen)
-	go current.HandleEvent(screen)
-
 	for {
+		current.Update()
+		current.Draw(screen)
+		current.HandleEvent(screen)
 		if next := current.Next(); next != nil {
 			current = next
 		}
