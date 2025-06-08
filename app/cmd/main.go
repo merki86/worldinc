@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"time"
 	"worldinc/app/internal/model"
 	"worldinc/app/internal/scene"
+	"worldinc/app/pkg/print"
 
 	"github.com/gdamore/tcell/v2"
 )
@@ -24,6 +26,12 @@ var game = model.GameState{
 		},
 	},
 }
+
+var (
+	frameCount int
+	lastTime   = time.Now()
+	fps        int
+)
 
 func main() {
 	screen, _ := tcell.NewScreen()
@@ -52,7 +60,7 @@ func handle(game *model.GameState, screen tcell.Screen) {
 }
 
 func logic(game *model.GameState) {
-	tick := time.NewTicker(500 * time.Millisecond)
+	tick := time.NewTicker(200 * time.Millisecond)
 	defer tick.Stop()
 
 	for range tick.C {
@@ -67,10 +75,17 @@ func logic(game *model.GameState) {
 }
 
 func render(game *model.GameState, screen tcell.Screen) {
-	tick := time.NewTicker(1 * time.Second / 30) // 30 FPS
+	tick := time.NewTicker(1 * time.Second / 30)
 	defer tick.Stop()
 
 	for range tick.C {
+		frameCount++
+		if time.Since(lastTime) >= time.Second {
+			fps = frameCount
+			frameCount = 0
+			lastTime = time.Now()
+		}
+
 		screen.Clear()
 
 		game.Mutex.Lock()
@@ -80,6 +95,8 @@ func render(game *model.GameState, screen tcell.Screen) {
 		if scene != nil {
 			scene.Draw(screen)
 		}
+
+		print.Print(screen, 0, 0, fmt.Sprintf("FPS: %v", fps))
 
 		screen.Show()
 	}
