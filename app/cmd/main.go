@@ -37,11 +37,16 @@ func startScene(current model.Scene, screen tcell.Screen) {
 	done := make(chan struct{})
 
 	go func() {
-		current.Draw(screen, done)
+		for {
+			current.Draw(screen, done)
+		}
 	}()
 	go func() {
-		current.Update(done)
+		for {
+			current.Update(done)
+		}
 	}()
+
 	for {
 		current.HandleEvent(screen)
 		if next := current.Next(); next != nil {
