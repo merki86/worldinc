@@ -29,13 +29,13 @@ func main() {
 	screen.Init()
 	defer screen.Fini()
 
-	var current model.Scene = scene.NewGameScene()
+	var current model.Scene = scene.NewGameScene(&game)
+
+	go current.Update()
+	go current.Draw(screen)
+	go current.HandleEvent(screen)
 
 	for {
-		current.Update()
-		current.Draw(screen)
-		current.HandleEvent(&game, screen)
-
 		if next := current.Next(); next != nil {
 			current = next
 		}

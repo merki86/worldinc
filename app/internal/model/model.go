@@ -15,7 +15,7 @@ type GameState struct {
 type Scene interface {
 	Update()
 	Draw(s tcell.Screen)
-	HandleEvent(game *GameState, s tcell.Screen)
+	HandleEvent(s tcell.Screen)
 	Next() Scene
 }
 
