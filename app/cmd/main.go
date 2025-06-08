@@ -13,7 +13,22 @@ import (
 var game = model.GameState{
 	World: model.World{
 		Population: 5000,
-		DaysPassed: 1,
+		Infected:   0,
+		Dead:       0,
+		Disease: model.Disease{
+			Name:         "Bacteria",
+			Mortality:    0,
+			Transmission: 0,
+			Discovered:   false,
+			Symptoms: []model.Symptom{
+				{
+					Name:           "Nausea",
+					MortalityBonus: 0,
+					Cost:           5,
+					Unlocked:       true,
+				},
+			},
+		},
 		Regions: []model.Region{
 			{
 				Name:       "Europe",
@@ -24,6 +39,7 @@ var game = model.GameState{
 				Population: 2020,
 			},
 		},
+		DaysPassed: 0,
 	},
 }
 

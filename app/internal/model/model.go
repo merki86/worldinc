@@ -24,8 +24,8 @@ type World struct {
 	Population int
 	Infected   int
 	Dead       int
-	Regions    []Region
 	Disease    Disease
+	Regions    []Region
 	DaysPassed int
 }
 
