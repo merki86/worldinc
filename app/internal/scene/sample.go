@@ -2,6 +2,7 @@ package scene
 
 import (
 	"os"
+	"time"
 	"worldinc/app/internal/model"
 
 	"github.com/gdamore/tcell/v2"
@@ -9,7 +10,6 @@ import (
 
 type sampleScene struct {
 	game *model.GameState
-	next model.Scene
 }
 
 func NewSampleScene(game *model.GameState) *sampleScene {
@@ -18,40 +18,24 @@ func NewSampleScene(game *model.GameState) *sampleScene {
 	}
 }
 
-func (g *sampleScene) Update(done chan struct{}) {
-	select {
-	case <-done:
-		return
-	default:
-		// Update
-	}
+func (s *sampleScene) Update(dt time.Duration) {
+
 }
 
-func (g *sampleScene) Draw(s tcell.Screen, done chan struct{}) {
-	select {
-	case <-done:
-		return
-	default:
-		s.Fill('s', tcell.StyleDefault)
-		s.Show()
-	}
+func (s *sampleScene) Draw(sc tcell.Screen) {
+	sc.Fill('a', tcell.StyleDefault)
 }
 
-func (g *sampleScene) HandleEvent(s tcell.Screen) {
-	event := s.PollEvent()
-	switch event := event.(type) {
+func (s *sampleScene) HandleEvent(ev tcell.Event) {
+	switch ev := ev.(type) {
 	case *tcell.EventKey:
-		g.game.Mutex.Lock()
-		switch event.Key() {
+		switch ev.Key() {
 		case tcell.KeyEscape:
 			os.Exit(0)
 		case tcell.KeyEnter:
-			g.next = NewGameScene(g.game)
+			s.game.Mutex.Lock()
+			s.game.CurrentScene = NewGameScene(s.game)
+			s.game.Mutex.Unlock()
 		}
-		g.game.Mutex.Unlock()
 	}
-}
-
-func (g *sampleScene) Next() model.Scene {
-	return g.next
 }

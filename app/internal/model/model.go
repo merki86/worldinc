@@ -2,6 +2,7 @@ package model
 
 import (
 	"sync"
+	"time"
 
 	"github.com/gdamore/tcell/v2"
 )
@@ -13,10 +14,10 @@ type GameState struct {
 }
 
 type Scene interface {
-	Update(done chan struct{})
-	Draw(s tcell.Screen, done chan struct{})
-	HandleEvent(s tcell.Screen)
-	Next() Scene
+	Update(dt time.Duration)
+	Draw(s tcell.Screen)
+	HandleEvent(ev tcell.Event)
+	// Next() Scene
 }
 
 type World struct {

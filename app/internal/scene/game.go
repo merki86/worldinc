@@ -11,7 +11,6 @@ import (
 
 type gameScene struct {
 	game *model.GameState
-	next model.Scene
 }
 
 var textPos int = 0
@@ -25,47 +24,32 @@ func NewGameScene(game *model.GameState) *gameScene {
 	}
 }
 
-func (g *gameScene) Update(done chan struct{}) {
-	select {
-	case <-done:
-		return
-	default:
-		g.game.Mutex.Lock()
-		textPos++
-		g.game.Mutex.Unlock()
+func (s *gameScene) Update(dt time.Duration) {
+	s.game.Mutex.Lock()
+	textPos++
+	s.game.Mutex.Unlock()
 
-		time.Sleep(100 * time.Millisecond)
-	}
+	time.Sleep(100 * time.Millisecond)
 }
 
-func (g *gameScene) Draw(s tcell.Screen, done chan struct{}) {
-	select {
-	case <-done:
-		return
-	default:
-		g.game.Mutex.Lock()
-		s.Clear()
-		print.Print(s, textPos, 1, "Hewoo")
-		s.Show()
-		g.game.Mutex.Unlock()
-	}
+func (s *gameScene) Draw(sc tcell.Screen) {
+	s.game.Mutex.Lock()
+	sc.Clear()
+	print.Print(sc, textPos, 1, "Hewoo")
+	sc.Show()
+	s.game.Mutex.Unlock()
 }
 
-func (g *gameScene) HandleEvent(s tcell.Screen) {
-	event := s.PollEvent()
-	switch event := event.(type) {
+func (s *gameScene) HandleEvent(ev tcell.Event) {
+	switch ev := ev.(type) {
 	case *tcell.EventKey:
-		g.game.Mutex.Lock()
-		switch event.Key() {
+		switch ev.Key() {
 		case tcell.KeyEscape:
 			os.Exit(0)
 		case tcell.KeyEnter:
-			g.next = NewSampleScene(g.game)
+			s.game.Mutex.Lock()
+			s.game.CurrentScene = NewSampleScene(s.game)
+			s.game.Mutex.Unlock()
 		}
-		g.game.Mutex.Unlock()
 	}
-}
-
-func (g *gameScene) Next() model.Scene {
-	return g.next
 }
