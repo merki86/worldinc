@@ -20,7 +20,8 @@ func (g *gameScene) Update() {
 }
 
 func (g *gameScene) Draw(s tcell.Screen) {
-	// Draw
+	s.SetContent(0, 0, '5', []rune{'a', 's', 'a', 'p', '!'}, tcell.StyleDefault)
+	s.Show()
 }
 
 func (g *gameScene) Next() model.Scene {
@@ -31,12 +32,14 @@ func (g *gameScene) HandleEvent(game *model.GameState, s tcell.Screen) {
 	event := s.PollEvent()
 	switch event := event.(type) {
 	case *tcell.EventKey:
-		game.Mutex.Lock()
+		// game.Mutex.Lock()
 		switch event.Key() {
 		case tcell.KeyEscape:
-			// game.CurrentScene = gameScene.Next()
 			os.Exit(0)
+		case tcell.KeyEnter:
+			g.next = NewSampleScene()
+
 		}
-		game.Mutex.Unlock()
+		// game.Mutex.Unlock()
 	}
 }
