@@ -1,11 +1,21 @@
 package model
 
-import "github.com/gdamore/tcell/v2"
+import (
+	"sync"
+
+	"github.com/gdamore/tcell/v2"
+)
+
+type GameState struct {
+	World        World
+	CurrentScene Scene
+	Mutex        sync.Mutex
+}
 
 type Scene interface {
 	Update()
 	Draw(s tcell.Screen)
-	EventHandler(s tcell.Screen)
+	HandleEvent(game *GameState, s tcell.Screen)
 	Next() Scene
 }
 
