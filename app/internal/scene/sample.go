@@ -1,9 +1,11 @@
 package scene
 
 import (
+	"fmt"
 	"os"
 	"time"
 	"worldinc/app/internal/model"
+	"worldinc/app/pkg/print"
 
 	"github.com/gdamore/tcell/v2"
 )
@@ -12,18 +14,34 @@ type sampleScene struct {
 	game *model.GameState
 }
 
+var textPos int = 0
+
 func NewSampleScene(game *model.GameState) *sampleScene {
+	// Here we reset all vars of the scene
+	textPos = 0
+
 	return &sampleScene{
 		game: game,
 	}
 }
 
 func (s *sampleScene) Update(dt time.Duration) {
+	s.game.Mutex.Lock()
+	textPos++
+	s.game.Mutex.Unlock()
 
+	time.Sleep(100 * time.Millisecond)
 }
 
 func (s *sampleScene) Draw(sc tcell.Screen) {
-	sc.Fill('a', tcell.StyleDefault)
+	s.game.Mutex.Lock()
+	for i := 1; i < 5; i++ {
+		print.Print(sc, textPos-i, i, fmt.Sprintf("%v.sample.%v", textPos, textPos))
+	}
+	for i := 1; i < 5; i++ {
+		print.Print(sc, textPos+i-5, i+4, fmt.Sprintf("%v.sample.%v", textPos, textPos))
+	}
+	s.game.Mutex.Unlock()
 }
 
 func (s *sampleScene) HandleEvent(ev tcell.Event) {
