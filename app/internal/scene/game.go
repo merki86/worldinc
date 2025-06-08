@@ -47,9 +47,8 @@ func (s *gameScene) Draw(sc tcell.Screen) {
 	print.Print(sc, 0, row, "=== Symptoms ===")
 	for i, v := range s.game.World.Disease.Symptoms {
 		print.Print(sc, 0, row+1, fmt.Sprintf("%v. %v = $%v [%v]", i+1, v.Name, v.Cost, v.Unlocked))
-		print.Print(sc, 0, row+2, fmt.Sprintf("   Mortality bonus: %v", v.MortalityBonus))
+		print.Print(sc, 0, row+2, fmt.Sprintf("   MT / TR bonus: %v / %v", v.MortalityBonus, v.TransmissionBonus))
 	}
-
 }
 
 func (s *gameScene) HandleEvent(ev tcell.Event) {

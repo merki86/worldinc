@@ -45,8 +45,9 @@ type Disease struct {
 }
 
 type Symptom struct {
-	Name           string
-	MortalityBonus float64
-	Cost           int
-	Unlocked       bool
+	Name              string
+	MortalityBonus    float64
+	TransmissionBonus float64
+	Cost              int
+	Unlocked          bool
 }

@@ -22,10 +22,11 @@ var game = model.GameState{
 			Discovered:   false,
 			Symptoms: []model.Symptom{
 				{
-					Name:           "Nausea",
-					MortalityBonus: 0,
-					Cost:           5,
-					Unlocked:       true,
+					Name:              "Nausea",
+					MortalityBonus:    0,
+					TransmissionBonus: 0,
+					Cost:              5,
+					Unlocked:          true,
 				},
 			},
 		},
