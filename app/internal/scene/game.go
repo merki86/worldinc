@@ -2,6 +2,7 @@ package scene
 
 import (
 	"os"
+	"time"
 	"worldinc/app/internal/model"
 	"worldinc/app/pkg/print"
 
@@ -14,6 +15,7 @@ type gameScene struct {
 }
 
 func NewGameScene(game *model.GameState) *gameScene {
+	textPos = 0
 	return &gameScene{
 		game: game,
 	}
@@ -21,24 +23,34 @@ func NewGameScene(game *model.GameState) *gameScene {
 
 var textPos int = 0
 
-func (g *gameScene) Update() {
+func (g *gameScene) Update(done chan struct{}) {
+	for {
+		select {
+		case <-done:
+			return
+		default:
+			g.game.Mutex.Lock()
+			textPos++
+			g.game.Mutex.Unlock()
 
-	// g.game.Mutex.Lock()
-	textPos++
-	// g.game.Mutex.Unlock()
-
-	// time.Sleep(100 * time.Millisecond)
-
+			time.Sleep(100 * time.Millisecond)
+		}
+	}
 }
 
-func (g *gameScene) Draw(s tcell.Screen) {
-
-	// g.game.Mutex.Lock()
-	s.Clear()
-	print.Print(s, textPos, 1, "Hewoo")
-	s.Show()
-	// g.game.Mutex.Unlock()
-
+func (g *gameScene) Draw(s tcell.Screen, done chan struct{}) {
+	for {
+		select {
+		case <-done:
+			return
+		default:
+			g.game.Mutex.Lock()
+			s.Clear()
+			print.Print(s, textPos, 1, "Hewoo")
+			s.Show()
+			g.game.Mutex.Unlock()
+		}
+	}
 }
 
 func (g *gameScene) Next() model.Scene {
@@ -46,7 +58,6 @@ func (g *gameScene) Next() model.Scene {
 }
 
 func (g *gameScene) HandleEvent(s tcell.Screen) {
-
 	event := s.PollEvent()
 	switch event := event.(type) {
 	case *tcell.EventKey:
@@ -58,6 +69,5 @@ func (g *gameScene) HandleEvent(s tcell.Screen) {
 			g.next = NewSampleScene(g.game)
 		}
 		// game.Mutex.Unlock()
-
 	}
 }

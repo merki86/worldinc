@@ -30,13 +30,27 @@ func main() {
 	defer screen.Fini()
 
 	var current model.Scene = scene.NewGameScene(&game)
+	startScene(current, screen)
+}
 
+func startScene(current model.Scene, screen tcell.Screen) {
+	done := make(chan struct{})
+
+	go func() {
+		current.Draw(screen, done)
+	}()
+	go func() {
+		current.Update(done)
+	}()
 	for {
-		current.Update()
-		current.Draw(screen)
 		current.HandleEvent(screen)
 		if next := current.Next(); next != nil {
+			close(done)
+			game.Mutex.Lock()
 			current = next
+			game.Mutex.Unlock()
+			startScene(current, screen)
+			return
 		}
 	}
 }

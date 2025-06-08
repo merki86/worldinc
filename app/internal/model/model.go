@@ -13,8 +13,8 @@ type GameState struct {
 }
 
 type Scene interface {
-	Update()
-	Draw(s tcell.Screen)
+	Update(done chan struct{})
+	Draw(s tcell.Screen, done chan struct{})
 	HandleEvent(s tcell.Screen)
 	Next() Scene
 }

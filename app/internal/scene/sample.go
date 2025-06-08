@@ -18,11 +18,11 @@ func NewSampleScene(game *model.GameState) *sampleScene {
 	}
 }
 
-func (g *sampleScene) Update() {
+func (g *sampleScene) Update(done chan struct{}) {
 	// Update
 }
 
-func (g *sampleScene) Draw(s tcell.Screen) {
+func (g *sampleScene) Draw(s tcell.Screen, done chan struct{}) {
 
 	s.Fill('s', tcell.StyleDefault)
 	s.Show()
