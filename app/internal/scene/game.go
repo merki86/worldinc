@@ -3,8 +3,7 @@ package scene
 import (
 	"fmt"
 	"os"
-	"time"
-	"worldinc/app/internal"
+	"worldinc/app/internal/logic"
 	"worldinc/app/internal/model"
 	"worldinc/app/pkg/print"
 
@@ -21,23 +20,20 @@ func NewGameScene(game *model.GameState) *gameScene {
 	}
 }
 
-var (
-	diedToday     int = 0
-	infectedToday int = 0
-)
-
-func (s *gameScene) Update(dt time.Duration) {
+func (s *gameScene) Update() {
+	s.game.Mutex.Lock()
 	world := &s.game.World
-
-	infectedToday, diedToday = internal.Simulate(world)
+	logic.DoWorldTick(world)
+	s.game.Mutex.Unlock()
 }
 
 func (s *gameScene) Draw(sc tcell.Screen) {
+	s.game.Mutex.Lock()
 	world := &s.game.World
 
 	print.Print(sc, 0, 1, fmt.Sprintf("DAY: %v === World ===", world.DaysPassed))
 	print.Print(sc, 0, 2, fmt.Sprintf("Healthy: %v", world.Healthy))
-	print.Print(sc, 0, 3, fmt.Sprintf("Infected: %v +%v / Dead: %v +%v", world.Infected, infectedToday, world.Dead, diedToday))
+	print.Print(sc, 0, 3, fmt.Sprintf("Infected: %v +%v / Dead: %v +%v", world.Infected, world.NewInfected, world.Dead, world.NewDead))
 
 	print.Print(sc, 0, 4, "=== Disease ===")
 	print.Print(sc, 0, 5, fmt.Sprintf("Name: %v", world.Disease.Name))
@@ -59,6 +55,7 @@ func (s *gameScene) Draw(sc tcell.Screen) {
 		print.Print(sc, 0, row+1, fmt.Sprintf("%v. %v = $%v [%v]", i+1, v.Name, v.Cost, v.Unlocked))
 		print.Print(sc, 0, row+2, fmt.Sprintf("   MT / TR bonus: %v / %v", v.MortalityBonus, v.TransmissionBonus))
 	}
+	s.game.Mutex.Unlock()
 }
 
 func (s *gameScene) HandleEvent(ev tcell.Event) {
@@ -68,6 +65,10 @@ func (s *gameScene) HandleEvent(ev tcell.Event) {
 		case tcell.KeyEscape:
 			os.Exit(0)
 		case tcell.KeyEnter:
+			s.game.Mutex.Lock()
+			s.game.CurrentScene = NewSymptomsScene(s.game)
+			s.game.Mutex.Unlock()
+		case tcell.KeyTab:
 			s.game.Mutex.Lock()
 			s.game.CurrentScene = NewSampleScene(s.game)
 			s.game.Mutex.Unlock()

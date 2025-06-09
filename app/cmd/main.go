@@ -10,6 +10,25 @@ import (
 	"github.com/gdamore/tcell/v2"
 )
 
+// TODO: move the shit outta here
+var SymptomsList = []model.Symptom{
+	{
+		Name:              "Nausea",
+		MortalityBonus:    0.2,
+		TransmissionBonus: 0.001,
+		Cost:              5,
+		Unlocked:          true,
+	},
+	{
+		Name:              "Insomnia",
+		MortalityBonus:    0.1,
+		TransmissionBonus: 0.001,
+		Cost:              5,
+		Unlocked:          false,
+	},
+}
+
+// TODO: Execute function that generates the struct
 var game = model.GameState{
 	World: model.World{
 		Healthy:  20,
@@ -21,13 +40,7 @@ var game = model.GameState{
 			Transmission: 0.001,
 			Discovered:   false,
 			Symptoms: []model.Symptom{
-				{
-					Name:              "Nausea",
-					MortalityBonus:    0,
-					TransmissionBonus: 0,
-					Cost:              5,
-					Unlocked:          true,
-				},
+				SymptomsList[0],
 			},
 		},
 		Regions: []model.Region{
@@ -42,8 +55,10 @@ var game = model.GameState{
 		},
 		DaysPassed: 0,
 	},
+	Symptoms: SymptomsList,
 }
 
+// TODO: Into another file maybe?
 var (
 	frameCount int
 	lastTime   = time.Now()
@@ -86,7 +101,7 @@ func logic(game *model.GameState) {
 		game.Mutex.Unlock()
 
 		if scene != nil {
-			scene.Update(500 * time.Millisecond)
+			scene.Update()
 		}
 	}
 }

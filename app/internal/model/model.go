@@ -2,28 +2,32 @@ package model
 
 import (
 	"sync"
-	"time"
 
 	"github.com/gdamore/tcell/v2"
 )
 
 type GameState struct {
 	World        World
+	Symptoms     []Symptom
 	CurrentScene Scene
 	Mutex        sync.Mutex
 }
 
 type Scene interface {
-	Update(dt time.Duration)
+	Update()
 	Draw(s tcell.Screen)
 	HandleEvent(ev tcell.Event)
-	// Next() Scene
 }
 
 type World struct {
-	Healthy    int
-	Infected   int
-	Dead       int
+	Total    int
+	Healthy  int
+	Infected int
+	Dead     int
+
+	NewInfected int
+	NewDead     int
+
 	Disease    Disease
 	Regions    []Region
 	DaysPassed int
@@ -46,8 +50,8 @@ type Disease struct {
 
 type Symptom struct {
 	Name              string
-	MortalityBonus    int
-	TransmissionBonus int
+	MortalityBonus    float64
+	TransmissionBonus float64
 	Cost              int
 	Unlocked          bool
 }
