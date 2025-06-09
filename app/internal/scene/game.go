@@ -21,15 +21,10 @@ func NewGameScene(game *model.GameState) *gameScene {
 	}
 }
 
-var (
-	diedToday     int = 0
-	infectedToday int = 0
-)
-
 func (s *gameScene) Update(dt time.Duration) {
 	world := &s.game.World
 
-	infectedToday, diedToday = internal.Simulate(world)
+	internal.Simulate(world)
 }
 
 func (s *gameScene) Draw(sc tcell.Screen) {
@@ -37,7 +32,7 @@ func (s *gameScene) Draw(sc tcell.Screen) {
 
 	print.Print(sc, 0, 1, fmt.Sprintf("DAY: %v === World ===", world.DaysPassed))
 	print.Print(sc, 0, 2, fmt.Sprintf("Healthy: %v", world.Healthy))
-	print.Print(sc, 0, 3, fmt.Sprintf("Infected: %v +%v / Dead: %v +%v", world.Infected, infectedToday, world.Dead, diedToday))
+	print.Print(sc, 0, 3, fmt.Sprintf("Infected: %v +%v / Dead: %v +%v", world.Infected, world.NewInfected, world.Dead, world.NewDead))
 
 	print.Print(sc, 0, 4, "=== Disease ===")
 	print.Print(sc, 0, 5, fmt.Sprintf("Name: %v", world.Disease.Name))
