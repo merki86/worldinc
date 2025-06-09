@@ -12,13 +12,13 @@ import (
 
 var game = model.GameState{
 	World: model.World{
-		Population: 5000,
-		Infected:   0,
-		Dead:       0,
+		Healthy:  20,
+		Infected: 1,
+		Dead:     0,
 		Disease: model.Disease{
 			Name:         "Bacteria",
-			Mortality:    0,
-			Transmission: 0,
+			Mortality:    0.2,
+			Transmission: 0.001,
 			Discovered:   false,
 			Symptoms: []model.Symptom{
 				{
@@ -77,7 +77,7 @@ func handle(game *model.GameState, screen tcell.Screen) {
 }
 
 func logic(game *model.GameState) {
-	tick := time.NewTicker(200 * time.Millisecond)
+	tick := time.NewTicker(time.Second)
 	defer tick.Stop()
 
 	for range tick.C {
@@ -92,7 +92,7 @@ func logic(game *model.GameState) {
 }
 
 func render(game *model.GameState, screen tcell.Screen) {
-	tick := time.NewTicker(1 * time.Second / 30)
+	tick := time.NewTicker(time.Second / 30)
 	defer tick.Stop()
 
 	for range tick.C {

@@ -29,8 +29,6 @@ func (s *sampleScene) Update(dt time.Duration) {
 	s.game.Mutex.Lock()
 	textPos++
 	s.game.Mutex.Unlock()
-
-	time.Sleep(100 * time.Millisecond)
 }
 
 func (s *sampleScene) Draw(sc tcell.Screen) {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"time"
+	"worldinc/app/internal"
 	"worldinc/app/internal/model"
 	"worldinc/app/pkg/print"
 
@@ -20,24 +21,33 @@ func NewGameScene(game *model.GameState) *gameScene {
 	}
 }
 
-func (s *gameScene) Update(dt time.Duration) {
+var (
+	diedToday     int = 0
+	infectedToday int = 0
+)
 
+func (s *gameScene) Update(dt time.Duration) {
+	world := &s.game.World
+
+	infectedToday, diedToday = internal.Simulate(world)
 }
 
 func (s *gameScene) Draw(sc tcell.Screen) {
-	print.Print(sc, 0, 1, fmt.Sprintf("DAY: %v === World ===", s.game.World.DaysPassed))
-	print.Print(sc, 0, 2, fmt.Sprintf("Population: %v", s.game.World.Population))
-	print.Print(sc, 0, 3, fmt.Sprintf("Infected: %v / Dead: %v", s.game.World.Infected, s.game.World.Dead))
+	world := &s.game.World
+
+	print.Print(sc, 0, 1, fmt.Sprintf("DAY: %v === World ===", world.DaysPassed))
+	print.Print(sc, 0, 2, fmt.Sprintf("Healthy: %v", world.Healthy))
+	print.Print(sc, 0, 3, fmt.Sprintf("Infected: %v +%v / Dead: %v +%v", world.Infected, infectedToday, world.Dead, diedToday))
 
 	print.Print(sc, 0, 4, "=== Disease ===")
-	print.Print(sc, 0, 5, fmt.Sprintf("Name: %v", s.game.World.Disease.Name))
-	print.Print(sc, 0, 6, fmt.Sprintf("Mortality: %v", s.game.World.Disease.Mortality))
-	print.Print(sc, 0, 7, fmt.Sprintf("Transmission: %v", s.game.World.Disease.Transmission))
-	print.Print(sc, 0, 8, fmt.Sprintf("Discovered: %v", s.game.World.Disease.Discovered))
+	print.Print(sc, 0, 5, fmt.Sprintf("Name: %v", world.Disease.Name))
+	print.Print(sc, 0, 6, fmt.Sprintf("Mortality: %v", world.Disease.Mortality))
+	print.Print(sc, 0, 7, fmt.Sprintf("Transmission: %v", world.Disease.Transmission))
+	print.Print(sc, 0, 8, fmt.Sprintf("Discovered: %v", world.Disease.Discovered))
 
 	print.Print(sc, 0, 9, "=== Regions ===")
 	row := 10
-	for i, v := range s.game.World.Regions {
+	for i, v := range world.Regions {
 		print.Print(sc, 0, row, fmt.Sprintf("%v. %v", i+1, v.Name))
 		print.Print(sc, 0, row+1, fmt.Sprintf("   Population: %v", v.Population))
 		print.Print(sc, 0, row+2, fmt.Sprintf("   Infected: %v / Dead: %v", v.Infected, v.Dead))
@@ -45,7 +55,7 @@ func (s *gameScene) Draw(sc tcell.Screen) {
 	}
 
 	print.Print(sc, 0, row, "=== Symptoms ===")
-	for i, v := range s.game.World.Disease.Symptoms {
+	for i, v := range world.Disease.Symptoms {
 		print.Print(sc, 0, row+1, fmt.Sprintf("%v. %v = $%v [%v]", i+1, v.Name, v.Cost, v.Unlocked))
 		print.Print(sc, 0, row+2, fmt.Sprintf("   MT / TR bonus: %v / %v", v.MortalityBonus, v.TransmissionBonus))
 	}

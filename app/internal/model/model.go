@@ -21,7 +21,7 @@ type Scene interface {
 }
 
 type World struct {
-	Population int
+	Healthy    int
 	Infected   int
 	Dead       int
 	Disease    Disease
@@ -46,8 +46,8 @@ type Disease struct {
 
 type Symptom struct {
 	Name              string
-	MortalityBonus    float64
-	TransmissionBonus float64
+	MortalityBonus    int
+	TransmissionBonus int
 	Cost              int
 	Unlocked          bool
 }
