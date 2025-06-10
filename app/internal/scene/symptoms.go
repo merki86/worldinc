@@ -12,12 +12,16 @@ import (
 )
 
 type symptomsScene struct {
-	game *model.GameState
+	game       *model.GameState
+	hovered    int
+	isSelected bool
 }
 
 func NewSymptomsScene(game *model.GameState) *symptomsScene {
 	return &symptomsScene{
-		game: game,
+		game:       game,
+		hovered:    1,     // cause the hovered item should be the very first one
+		isSelected: false, // TODO: a []int to select multiple
 	}
 }
 
@@ -25,18 +29,44 @@ func (s *symptomsScene) Update() {
 	world := &s.game.World
 
 	logic.DoWorldTick(world)
+	if s.isSelected {
+		logic.Buy(s.hovered)
+	}
 }
 
 func (s *symptomsScene) Draw(sc tcell.Screen) {
-	// world := &s.game.World
+	world := &s.game.World
 	symptomsList := &s.game.Symptoms
 
 	print.Print(sc, 0, 1, "=== Symptoms store ===")
 	row := 2
 	for i, v := range *symptomsList {
-		print.Print(sc, 0, row, fmt.Sprintf("%v. %v = $%v [%v]", i+1, v.Name, v.Cost, v.Unlocked))
-		print.Print(sc, 0, row+1, fmt.Sprintf("   MT / TR bonus: %v / %v", v.MortalityBonus, v.TransmissionBonus))
+		if v.Unlocked {
+			print.Print(sc, 0, row, fmt.Sprintf("[x] %v. %v - $%v [ID: %v]", i+1, v.Name, v.Cost, v.ID))
+		}
+
+		if v.ID == s.hovered {
+			print.Print(sc, 0, row, fmt.Sprintf("[x] %v. %v - $%v [ID: %v]", i+1, v.Name, v.Cost, v.ID))
+			if s.isSelected {
+				print.Print(sc, 0, row, fmt.Sprintf("[v] %v. %v - $%v [ID: %v]", i+1, v.Name, v.Cost, v.ID))
+			}
+		} else {
+			print.Print(sc, 0, row, fmt.Sprintf("[ ] %v. %v - $%v [ID: %v]", i+1, v.Name, v.Cost, v.ID))
+		}
+		print.Print(sc, 0, row+1, fmt.Sprintf("    MT / TR bonus: %v / %v", v.MortalityBonus, v.TransmissionBonus))
 		row += 2
+	}
+
+	print.Print(sc, 0, row, "=== Bought symptoms ===")
+	row += 1
+	for _, v := range world.Disease.Symptoms {
+		print.Print(sc, 0, row, fmt.Sprintf("%v. %v = $%v", v.ID, v.Name, v.Cost))
+		print.Print(sc, 0, row+1, fmt.Sprintf(" MT / TR bonus: %v / %v", v.MortalityBonus, v.TransmissionBonus))
+		row += 2
+	}
+
+	if s.isSelected {
+		print.Print(sc, 0, row, fmt.Sprintf("Ready to buy: %v. %v", s.hovered, s.game.Symptoms[s.hovered-1].Name))
 	}
 }
 
@@ -51,6 +81,18 @@ func (s *symptomsScene) HandleEvent(ev tcell.Event) {
 			switch strings.ToLower(string(ev.Rune())) {
 			case "d":
 				s.game.CurrentScene = NewGameScene(s.game)
+			case "w":
+				if s.hovered > 1 {
+					s.hovered -= 1
+					s.isSelected = false
+				}
+			case "s":
+				if s.hovered < len(s.game.Symptoms) {
+					s.hovered += 1
+					s.isSelected = false
+				}
+			case "e":
+				s.isSelected = !s.isSelected
 			}
 		}
 		s.game.Mutex.Unlock()

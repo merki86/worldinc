@@ -49,6 +49,7 @@ type Disease struct {
 }
 
 type Symptom struct {
+	ID                int
 	Name              string
 	MortalityBonus    float64
 	TransmissionBonus float64

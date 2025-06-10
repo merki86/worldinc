@@ -1,5 +1,5 @@
 package logic
 
-func Buy() {
+func Buy(s int) {
 
 }

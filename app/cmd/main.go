@@ -13,6 +13,7 @@ import (
 // TODO: move the shit outta here
 var SymptomsList = []model.Symptom{
 	{
+		ID:                1,
 		Name:              "Nausea",
 		MortalityBonus:    0.2,
 		TransmissionBonus: 0.001,
@@ -20,6 +21,7 @@ var SymptomsList = []model.Symptom{
 		Unlocked:          true,
 	},
 	{
+		ID:                2,
 		Name:              "Insomnia",
 		MortalityBonus:    0.1,
 		TransmissionBonus: 0.001,
