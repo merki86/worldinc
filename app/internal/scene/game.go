@@ -3,6 +3,7 @@ package scene
 import (
 	"fmt"
 	"os"
+	"strings"
 	"worldinc/app/internal/logic"
 	"worldinc/app/internal/model"
 	"worldinc/app/pkg/print"
@@ -61,17 +62,18 @@ func (s *gameScene) Draw(sc tcell.Screen) {
 func (s *gameScene) HandleEvent(ev tcell.Event) {
 	switch ev := ev.(type) {
 	case *tcell.EventKey:
+		s.game.Mutex.Lock()
 		switch ev.Key() {
 		case tcell.KeyEscape:
 			os.Exit(0)
-		case tcell.KeyEnter:
-			s.game.Mutex.Lock()
-			s.game.CurrentScene = NewSymptomsScene(s.game)
-			s.game.Mutex.Unlock()
 		case tcell.KeyTab:
-			s.game.Mutex.Lock()
 			s.game.CurrentScene = NewSampleScene(s.game)
-			s.game.Mutex.Unlock()
+		case tcell.KeyRune:
+			switch strings.ToLower(string(ev.Rune())) {
+			case "a":
+				s.game.CurrentScene = NewSymptomsScene(s.game)
+			}
 		}
+		s.game.Mutex.Unlock()
 	}
 }

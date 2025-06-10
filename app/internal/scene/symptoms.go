@@ -3,6 +3,7 @@ package scene
 import (
 	"fmt"
 	"os"
+	"strings"
 	"worldinc/app/internal/logic"
 	"worldinc/app/internal/model"
 	"worldinc/app/pkg/print"
@@ -33,8 +34,8 @@ func (s *symptomsScene) Draw(sc tcell.Screen) {
 	print.Print(sc, 0, 1, "=== Symptoms store ===")
 	row := 2
 	for i, v := range *symptomsList {
-		print.Print(sc, 0, row+1, fmt.Sprintf("%v. %v = $%v [%v]", i+1, v.Name, v.Cost, v.Unlocked))
-		print.Print(sc, 0, row+2, fmt.Sprintf("   MT / TR bonus: %v / %v", v.MortalityBonus, v.TransmissionBonus))
+		print.Print(sc, 0, row, fmt.Sprintf("%v. %v = $%v [%v]", i+1, v.Name, v.Cost, v.Unlocked))
+		print.Print(sc, 0, row+1, fmt.Sprintf("   MT / TR bonus: %v / %v", v.MortalityBonus, v.TransmissionBonus))
 		row += 2
 	}
 }
@@ -42,13 +43,16 @@ func (s *symptomsScene) Draw(sc tcell.Screen) {
 func (s *symptomsScene) HandleEvent(ev tcell.Event) {
 	switch ev := ev.(type) {
 	case *tcell.EventKey:
+		s.game.Mutex.Lock()
 		switch ev.Key() {
 		case tcell.KeyEscape:
 			os.Exit(0)
-		case tcell.KeyEnter:
-			s.game.Mutex.Lock()
-			s.game.CurrentScene = NewGameScene(s.game)
-			s.game.Mutex.Unlock()
+		case tcell.KeyRune:
+			switch strings.ToLower(string(ev.Rune())) {
+			case "d":
+				s.game.CurrentScene = NewGameScene(s.game)
+			}
 		}
+		s.game.Mutex.Unlock()
 	}
 }
