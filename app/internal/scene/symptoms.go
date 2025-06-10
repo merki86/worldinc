@@ -41,17 +41,13 @@ func (s *symptomsScene) Draw(sc tcell.Screen) {
 	print.Print(sc, 0, 1, "=== Symptoms store ===")
 	row := 2
 	for i, v := range *symptomsList {
-		if v.Unlocked {
-			print.Print(sc, 0, row, fmt.Sprintf("[x] %v. %v - $%v [ID: %v]", i+1, v.Name, v.Cost, v.ID))
-		}
-
 		if v.ID == s.hovered {
-			print.Print(sc, 0, row, fmt.Sprintf("[x] %v. %v - $%v [ID: %v]", i+1, v.Name, v.Cost, v.ID))
+			print.Print(sc, 0, row, fmt.Sprintf("[x] %v. %v - $%v [ID: %v] status: %v", i+1, v.Name, v.Cost, v.ID, v.Unlocked))
 			if s.isSelected {
-				print.Print(sc, 0, row, fmt.Sprintf("[v] %v. %v - $%v [ID: %v]", i+1, v.Name, v.Cost, v.ID))
+				print.Print(sc, 0, row, fmt.Sprintf("[v] %v. %v - $%v [ID: %v] status: %v", i+1, v.Name, v.Cost, v.ID, v.Unlocked))
 			}
 		} else {
-			print.Print(sc, 0, row, fmt.Sprintf("[ ] %v. %v - $%v [ID: %v]", i+1, v.Name, v.Cost, v.ID))
+			print.Print(sc, 0, row, fmt.Sprintf("[ ] %v. %v - $%v [ID: %v] status: %v", i+1, v.Name, v.Cost, v.ID, v.Unlocked))
 		}
 		print.Print(sc, 0, row+1, fmt.Sprintf("    MT / TR bonus: %v / %v", v.MortalityBonus, v.TransmissionBonus))
 		row += 2
