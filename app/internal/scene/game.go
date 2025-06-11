@@ -51,10 +51,18 @@ func (s *gameScene) Draw(sc tcell.Screen) {
 		row += 3
 	}
 
+	var unlocked = []model.Symptom{}
+	for _, v := range s.game.Symptoms {
+		if v.Unlocked {
+			unlocked = append(unlocked, v)
+		}
+	}
+
 	print.Print(sc, 0, row, "=== Symptoms ===")
-	for i, v := range world.Disease.Symptoms {
+	for i, v := range unlocked {
 		print.Print(sc, 0, row+1, fmt.Sprintf("%v. %v = $%v [%v]", i+1, v.Name, v.Cost, v.Unlocked))
 		print.Print(sc, 0, row+2, fmt.Sprintf("   MT / TR bonus: %v / %v", v.MortalityBonus, v.TransmissionBonus))
+		row += 2
 	}
 	s.game.Mutex.Unlock()
 }

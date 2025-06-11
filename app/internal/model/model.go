@@ -45,7 +45,6 @@ type Disease struct {
 	Mortality    float64
 	Transmission float64
 	Discovered   bool
-	Symptoms     []Symptom
 }
 
 type Symptom struct {

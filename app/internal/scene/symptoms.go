@@ -30,12 +30,12 @@ func (s *symptomsScene) Update() {
 
 	logic.DoWorldTick(world)
 	if s.isSelected {
-		logic.Buy(s.hovered)
+		logic.Buy(s.hovered, &s.game.Symptoms)
 	}
 }
 
 func (s *symptomsScene) Draw(sc tcell.Screen) {
-	world := &s.game.World
+	// world := &s.game.World
 	symptomsList := &s.game.Symptoms
 
 	print.Print(sc, 0, 1, "=== Symptoms store ===")
@@ -53,13 +53,13 @@ func (s *symptomsScene) Draw(sc tcell.Screen) {
 		row += 2
 	}
 
-	print.Print(sc, 0, row, "=== Bought symptoms ===")
-	row += 1
-	for _, v := range world.Disease.Symptoms {
-		print.Print(sc, 0, row, fmt.Sprintf("%v. %v = $%v", v.ID, v.Name, v.Cost))
-		print.Print(sc, 0, row+1, fmt.Sprintf(" MT / TR bonus: %v / %v", v.MortalityBonus, v.TransmissionBonus))
-		row += 2
-	}
+	// print.Print(sc, 0, row, "=== Bought symptoms ===")
+	// row += 1
+	// for _, v := range world.Disease.Symptoms {
+	// 	print.Print(sc, 0, row, fmt.Sprintf("%v. %v = $%v", v.ID, v.Name, v.Cost))
+	// 	print.Print(sc, 0, row+1, fmt.Sprintf(" MT / TR bonus: %v / %v", v.MortalityBonus, v.TransmissionBonus))
+	// 	row += 2
+	// }
 
 	if s.isSelected {
 		print.Print(sc, 0, row, fmt.Sprintf("Ready to buy: %v. %v", s.hovered, s.game.Symptoms[s.hovered-1].Name))
@@ -88,7 +88,15 @@ func (s *symptomsScene) HandleEvent(ev tcell.Event) {
 					s.isSelected = false
 				}
 			case "e":
-				s.isSelected = !s.isSelected
+				if s.hovered > 0 && s.hovered <= len((*s).game.Symptoms) {
+					if (*s).game.Symptoms[s.hovered-1].Unlocked {
+						s.isSelected = false
+					} else {
+						s.isSelected = !s.isSelected
+					}
+				} else {
+					s.isSelected = !s.isSelected
+				}
 			}
 		}
 		s.game.Mutex.Unlock()

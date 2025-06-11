@@ -1,5 +1,11 @@
 package logic
 
-func Buy(s int) {
+import "worldinc/app/internal/model"
 
+func Buy(id int, s *[]model.Symptom) {
+	for i, v := range *s {
+		if v.ID == id {
+			(*s)[i].Unlocked = true
+		}
+	}
 }

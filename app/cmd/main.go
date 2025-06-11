@@ -28,6 +28,30 @@ var SymptomsList = []model.Symptom{
 		Cost:              5,
 		Unlocked:          false,
 	},
+	{
+		ID:                3,
+		Name:              "Skin Rash",
+		MortalityBonus:    0.1,
+		TransmissionBonus: 0.001,
+		Cost:              5,
+		Unlocked:          false,
+	},
+	{
+		ID:                4,
+		Name:              "Cough",
+		MortalityBonus:    0.05,
+		TransmissionBonus: 0.05,
+		Cost:              5,
+		Unlocked:          false,
+	},
+	{
+		ID:                5,
+		Name:              "Fever",
+		MortalityBonus:    0.05,
+		TransmissionBonus: 0.01,
+		Cost:              5,
+		Unlocked:          false,
+	},
 }
 
 // TODO: Execute function that generates the struct
@@ -41,9 +65,6 @@ var game = model.GameState{
 			Mortality:    0.2,
 			Transmission: 0.001,
 			Discovered:   false,
-			Symptoms: []model.Symptom{
-				SymptomsList[0],
-			},
 		},
 		Regions: []model.Region{
 			{
