@@ -60,9 +60,8 @@ func (s *gameScene) Draw(sc tcell.Screen) {
 
 	print.Print(sc, 0, row, "=== Symptoms ===")
 	for i, v := range unlocked {
-		print.Print(sc, 0, row+1, fmt.Sprintf("%v. %v = $%v [%v]", i+1, v.Name, v.Cost, v.Unlocked))
-		print.Print(sc, 0, row+2, fmt.Sprintf("   MT / TR bonus: %v / %v", v.MortalityBonus, v.TransmissionBonus))
-		row += 2
+		print.Print(sc, 0, row+1, fmt.Sprintf("%v. %v = $%v MT / TR bonus: %v / %v", i+1, v.Name, v.Cost, v.MortalityBonus, v.TransmissionBonus))
+		row += 1
 	}
 	s.game.Mutex.Unlock()
 }
