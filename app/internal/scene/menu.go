@@ -2,6 +2,7 @@ package scene
 
 import (
 	"os"
+	"time"
 	"worldinc/app/internal/model"
 	"worldinc/app/pkg/print"
 
@@ -18,7 +19,7 @@ func NewMenuScene(game *model.GameState) *menuScene {
 	}
 }
 
-func (s *menuScene) Update() {
+func (s *menuScene) Update(t *time.Ticker) {
 }
 
 func (s *menuScene) Draw(sc tcell.Screen) {

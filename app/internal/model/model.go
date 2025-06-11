@@ -2,6 +2,7 @@ package model
 
 import (
 	"sync"
+	"time"
 
 	"github.com/gdamore/tcell/v2"
 )
@@ -14,7 +15,7 @@ type GameState struct {
 }
 
 type Scene interface {
-	Update()
+	Update(ticker *time.Ticker)
 	Draw(s tcell.Screen)
 	HandleEvent(ev tcell.Event)
 }
@@ -33,6 +34,8 @@ type World struct {
 	DaysPassed int
 
 	Credit int
+
+	Speed time.Duration
 }
 
 type Region struct {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 	"worldinc/app/internal/logic"
 	"worldinc/app/internal/model"
 	"worldinc/app/pkg/print"
@@ -26,7 +27,7 @@ func NewSymptomsScene(game *model.GameState) *symptomsScene {
 	}
 }
 
-func (s *symptomsScene) Update() {
+func (s *symptomsScene) Update(t *time.Ticker) {
 	s.game.Mutex.Lock()
 	w := &s.game.World
 

@@ -3,6 +3,7 @@ package scene
 import (
 	"fmt"
 	"os"
+	"time"
 	"worldinc/app/internal/model"
 	"worldinc/app/pkg/print"
 
@@ -21,7 +22,11 @@ func NewResultScene(game *model.GameState, isWin bool) *resultScene {
 	}
 }
 
-func (s *resultScene) Update() {
+func (s *resultScene) Update(t *time.Ticker) {
+	if s.game.World.Speed != time.Second {
+		s.game.World.Speed = time.Second
+		t.Reset(s.game.World.Speed)
+	}
 }
 
 func (s *resultScene) Draw(sc tcell.Screen) {

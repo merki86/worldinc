@@ -15,7 +15,7 @@ var SymptomsList = []model.Symptom{
 	{
 		ID:                1,
 		Name:              "Nausea",
-		MortalityBonus:    1.4,
+		MortalityBonus:    0,
 		TransmissionBonus: 0.001,
 		Cost:              5,
 		Unlocked:          false,
@@ -23,33 +23,33 @@ var SymptomsList = []model.Symptom{
 	{
 		ID:                2,
 		Name:              "Insomnia",
-		MortalityBonus:    1,
-		TransmissionBonus: 0.001,
-		Cost:              5,
+		MortalityBonus:    0.0005,
+		TransmissionBonus: 0.003,
+		Cost:              30,
 		Unlocked:          false,
 	},
 	{
 		ID:                3,
 		Name:              "Skin Rash",
-		MortalityBonus:    0.1,
-		TransmissionBonus: 0.002,
-		Cost:              5,
+		MortalityBonus:    0.001,
+		TransmissionBonus: 0.016,
+		Cost:              45,
 		Unlocked:          false,
 	},
 	{
 		ID:                4,
 		Name:              "Cough",
-		MortalityBonus:    0.2,
-		TransmissionBonus: 0.005,
-		Cost:              5,
+		MortalityBonus:    0.02,
+		TransmissionBonus: 0.2,
+		Cost:              60,
 		Unlocked:          false,
 	},
 	{
 		ID:                5,
 		Name:              "Fever",
 		MortalityBonus:    0.05,
-		TransmissionBonus: 0.002,
-		Cost:              10,
+		TransmissionBonus: 0.1,
+		Cost:              50,
 		Unlocked:          false,
 	},
 }
@@ -57,27 +57,17 @@ var SymptomsList = []model.Symptom{
 // TODO: Execute function that generates the struct
 var game = model.GameState{
 	World: model.World{
-		Healthy:  20,
+		Healthy:  80000,
 		Infected: 1,
 		Dead:     0,
 		Disease: model.Disease{
 			Name:         "Bacteria",
 			Mortality:    0,
 			Transmission: 0,
-			Discovered:   false,
-		},
-		Regions: []model.Region{
-			{
-				Name:       "Europe",
-				Population: 200,
-			},
-			{
-				Name:       "Asia",
-				Population: 2020,
-			},
 		},
 		DaysPassed: 0,
 		Credit:     5,
+		Speed:      time.Second,
 	},
 	Symptoms: SymptomsList,
 }
@@ -119,7 +109,7 @@ func handle(game *model.GameState, screen tcell.Screen) {
 }
 
 func logic(game *model.GameState) {
-	tick := time.NewTicker(time.Second)
+	tick := time.NewTicker(game.World.Speed)
 	defer tick.Stop()
 
 	for range tick.C {
@@ -128,7 +118,7 @@ func logic(game *model.GameState) {
 		game.Mutex.Unlock()
 
 		if scene != nil {
-			scene.Update()
+			scene.Update(tick)
 		}
 	}
 }

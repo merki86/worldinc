@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 	"worldinc/app/internal/logic"
 	"worldinc/app/internal/model"
 	"worldinc/app/pkg/print"
@@ -13,6 +14,7 @@ import (
 
 type gameScene struct {
 	game *model.GameState
+	t    *time.Ticker
 }
 
 func NewGameScene(game *model.GameState) *gameScene {
@@ -21,10 +23,11 @@ func NewGameScene(game *model.GameState) *gameScene {
 	}
 }
 
-func (s *gameScene) Update() {
+func (s *gameScene) Update(t *time.Ticker) {
 	s.game.Mutex.Lock()
 	w := &s.game.World
 	logic.DoWorldTick(w)
+	s.t = t
 
 	if w.Infected <= 0 {
 		if w.Healthy <= 0 {
@@ -40,7 +43,7 @@ func (s *gameScene) Draw(sc tcell.Screen) {
 	s.game.Mutex.Lock()
 	w := &s.game.World
 
-	print.Print(sc, 0, 1, fmt.Sprintf("DAY: %v | Credit: %v", w.DaysPassed, w.Credit))
+	print.Print(sc, 0, 1, fmt.Sprintf("DAY: %v | Speed: %v | Credit: %v", w.DaysPassed, w.Speed, w.Credit))
 	print.Print(sc, 0, 2, "=== World ===")
 	print.Print(sc, 0, 3, fmt.Sprintf("Healthy: %v", w.Healthy))
 	print.Print(sc, 0, 4, fmt.Sprintf("Infected: %v +%v / Dead: %v +%v", w.Infected, w.NewInfected, w.Dead, w.NewDead))
@@ -49,16 +52,6 @@ func (s *gameScene) Draw(sc tcell.Screen) {
 	print.Print(sc, 0, 6, fmt.Sprintf("Name: %v", w.Disease.Name))
 	print.Print(sc, 0, 7, fmt.Sprintf("Mortality: %v", w.Disease.Mortality))
 	print.Print(sc, 0, 8, fmt.Sprintf("Transmission: %v", w.Disease.Transmission))
-	print.Print(sc, 0, 9, fmt.Sprintf("Discovered: %v", w.Disease.Discovered))
-
-	print.Print(sc, 0, 10, "=== Regions ===")
-	row := 11
-	for i, v := range w.Regions {
-		print.Print(sc, 0, row, fmt.Sprintf("%v. %v", i+1, v.Name))
-		print.Print(sc, 0, row+1, fmt.Sprintf("   Population: %v", v.Population))
-		print.Print(sc, 0, row+2, fmt.Sprintf("   Infected: %v / Dead: %v", v.Infected, v.Dead))
-		row += 3
-	}
 
 	var unlocked = []model.Symptom{}
 	for _, v := range s.game.Symptoms {
@@ -67,7 +60,9 @@ func (s *gameScene) Draw(sc tcell.Screen) {
 		}
 	}
 
+	row := 9
 	print.Print(sc, 0, row, "=== Symptoms ===")
+	print.Print(sc, 0, row+1, "No symptoms")
 	for i, v := range unlocked {
 		print.Print(sc, 0, row+1, fmt.Sprintf("%v. %v = $%v MT / TR bonus: %v / %v", i+1, v.Name, v.Cost, v.MortalityBonus, v.TransmissionBonus))
 		row += 1
@@ -88,6 +83,18 @@ func (s *gameScene) HandleEvent(ev tcell.Event) {
 			switch strings.ToLower(string(ev.Rune())) {
 			case "a":
 				s.game.CurrentScene = NewSymptomsScene(s.game)
+			case "1":
+				s.game.World.Speed = time.Second
+				s.t.Reset(s.game.World.Speed)
+			case "2":
+				s.game.World.Speed = time.Second / 2
+				s.t.Reset(s.game.World.Speed)
+			case "3":
+				s.game.World.Speed = time.Second / 4
+				s.t.Reset(s.game.World.Speed)
+			case "4":
+				s.game.World.Speed = time.Second / 6
+				s.t.Reset(s.game.World.Speed)
 			}
 		}
 		s.game.Mutex.Unlock()

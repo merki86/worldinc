@@ -12,13 +12,17 @@ func DoWorldTick(w *model.World) {
 	w.Total = w.Healthy + w.Infected + w.Dead // it should be const btw
 
 	// i dunno if i should just pass values directly, cuz those are kinda helpful when it comes to debug the shit
-	th := int(math.Ceil(w.Disease.Transmission * float64(w.Healthy) * float64(w.Infected))) // th stand for Transmission * Healthy
-	mi := int(math.Ceil(w.Disease.Mortality * float64(w.Infected)))                         // mi stand for Transmission * Healthy
+	th := int(math.Ceil(w.Disease.Transmission * float64(w.Healthy))) // th stand for Transmission * Healthy
+	mi := int(math.Ceil(w.Disease.Mortality * float64(w.Infected)))   // mi stand for Transmission * Healthy
+
+	if w.Infected == 0 {
+		th = 0
+	}
 
 	w.NewInfected = th
 	w.Infected += w.NewInfected
 	w.Healthy -= w.NewInfected
-	w.Credit += w.NewInfected
+	w.Credit += int(math.Ceil(float64(w.NewInfected) / 1000))
 
 	if w.Healthy <= 0 {
 		w.NewInfected = w.Healthy + w.NewInfected
@@ -29,7 +33,6 @@ func DoWorldTick(w *model.World) {
 		w.NewDead = mi
 		w.Dead += w.NewDead
 		w.Infected -= w.NewDead
-		w.Credit += w.NewDead
 
 		if w.Infected <= 0 {
 			w.NewDead = w.Infected + w.NewDead

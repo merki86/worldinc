@@ -3,6 +3,7 @@ package scene
 import (
 	"fmt"
 	"os"
+	"time"
 	"worldinc/app/internal/model"
 	"worldinc/app/pkg/print"
 
@@ -24,7 +25,7 @@ func NewSampleScene(game *model.GameState) *sampleScene {
 	}
 }
 
-func (s *sampleScene) Update() {
+func (s *sampleScene) Update(t *time.Ticker) {
 	s.game.Mutex.Lock()
 	textPos++
 	s.game.Mutex.Unlock()
