@@ -25,6 +25,14 @@ func (s *gameScene) Update() {
 	s.game.Mutex.Lock()
 	w := &s.game.World
 	logic.DoWorldTick(w)
+
+	if w.Infected <= 0 {
+		if w.Healthy <= 0 {
+			s.game.CurrentScene = NewResultScene(s.game, true)
+		} else {
+			s.game.CurrentScene = NewResultScene(s.game, false)
+		}
+	}
 	s.game.Mutex.Unlock()
 }
 
