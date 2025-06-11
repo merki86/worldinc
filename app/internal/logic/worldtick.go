@@ -12,8 +12,8 @@ func DoWorldTick(w *model.World) {
 	w.Total = w.Healthy + w.Infected + w.Dead // it should be const btw
 
 	// i dunno if i should just pass values directly, cuz those are kinda helpful when it comes to debug the shit
-	th := int(math.Ceil(w.Disease.Transmission * float64(w.Healthy))) // th stand for Transmission * Healthy
-	mi := int(math.Ceil(w.Disease.Mortality * float64(w.Infected)))   // mi stand for Transmission * Healthy
+	th := int(math.Ceil(w.Disease.Transmission * float64(w.Healthy) * float64(w.Infected))) // th stand for Transmission * Healthy
+	mi := int(math.Ceil(w.Disease.Mortality * float64(w.Infected)))                         // mi stand for Transmission * Healthy
 
 	w.NewInfected = th
 	w.Infected += w.NewInfected
@@ -35,7 +35,7 @@ func DoWorldTick(w *model.World) {
 		}
 	}
 
-	// fmt.Printf("%v. H: %v I: %v [%v] D: %v [%v]  ", world.DaysPassed, world.Healthy, world.Infected, world.NewInfected, world.Dead, world.NewDead)
-	// fmt.Printf("T: %v M: %v T*H: %v M*I: %v\n", world.Disease.Transmission, world.Disease.Mortality, th, mi)
+	// fmt.Printf("%v. H: %v I: %v [%v] D: %v [%v]  ", w.DaysPassed, w.Healthy, w.Infected, w.NewInfected, w.Dead, w.NewDead)
+	// fmt.Printf("T: %v M: %v T*H: %v M*I: %v\n", w.Disease.Transmission, w.Disease.Mortality, th, mi)
 	// time.Sleep(time.Second * 5 / 20)
 }

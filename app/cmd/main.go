@@ -15,7 +15,7 @@ var SymptomsList = []model.Symptom{
 	{
 		ID:                1,
 		Name:              "Nausea",
-		MortalityBonus:    0.2,
+		MortalityBonus:    1.4,
 		TransmissionBonus: 0.001,
 		Cost:              5,
 		Unlocked:          true,
@@ -23,24 +23,24 @@ var SymptomsList = []model.Symptom{
 	{
 		ID:                2,
 		Name:              "Insomnia",
-		MortalityBonus:    0.1,
+		MortalityBonus:    1,
 		TransmissionBonus: 0.001,
 		Cost:              5,
-		Unlocked:          false,
+		Unlocked:          true,
 	},
 	{
 		ID:                3,
 		Name:              "Skin Rash",
 		MortalityBonus:    0.1,
-		TransmissionBonus: 0.001,
+		TransmissionBonus: 0.002,
 		Cost:              5,
 		Unlocked:          false,
 	},
 	{
 		ID:                4,
 		Name:              "Cough",
-		MortalityBonus:    0.05,
-		TransmissionBonus: 0.05,
+		MortalityBonus:    0.2,
+		TransmissionBonus: 0.005,
 		Cost:              5,
 		Unlocked:          false,
 	},
@@ -48,7 +48,7 @@ var SymptomsList = []model.Symptom{
 		ID:                5,
 		Name:              "Fever",
 		MortalityBonus:    0.05,
-		TransmissionBonus: 0.01,
+		TransmissionBonus: 0.002,
 		Cost:              5,
 		Unlocked:          false,
 	},
@@ -62,7 +62,7 @@ var game = model.GameState{
 		Dead:     0,
 		Disease: model.Disease{
 			Name:         "Bacteria",
-			Mortality:    0.2,
+			Mortality:    1.4,
 			Transmission: 0.001,
 			Discovered:   false,
 		},
@@ -89,6 +89,9 @@ var (
 )
 
 func main() {
+	// for {
+	// 	l.DoWorldTick(&game.World)
+	// }
 	screen, _ := tcell.NewScreen()
 	screen.Init()
 	defer screen.Fini()

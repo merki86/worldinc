@@ -31,7 +31,8 @@ func (s *symptomsScene) Update() {
 
 	logic.DoWorldTick(world)
 	if s.isSelected {
-		logic.Buy(s.hovered, &s.game.Symptoms)
+		i := logic.BuySymptom(s.hovered, &s.game.Symptoms)
+		logic.ApplySymptom(i, world)
 		s.isSelected = false
 	}
 	s.game.Mutex.Unlock()
