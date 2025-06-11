@@ -97,7 +97,7 @@ func main() {
 	screen.Init()
 	defer screen.Fini()
 
-	game.CurrentScene = scene.NewGameScene(&game)
+	game.CurrentScene = scene.NewMenuScene(&game)
 
 	go handle(&game, screen)
 	go logic(&game)
