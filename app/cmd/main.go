@@ -69,7 +69,8 @@ var game = model.GameState{
 		Credit:     5,
 		Speed:      time.Second,
 	},
-	Symptoms: SymptomsList,
+	Symptoms:   SymptomsList,
+	Gameticker: time.NewTicker(time.Second),
 }
 
 // TODO: Into another file maybe?
@@ -109,16 +110,15 @@ func handle(game *model.GameState, screen tcell.Screen) {
 }
 
 func logic(game *model.GameState) {
-	tick := time.NewTicker(game.World.Speed)
-	defer tick.Stop()
+	defer game.Gameticker.Stop()
 
-	for range tick.C {
+	for range game.Gameticker.C {
 		game.Mutex.Lock()
 		scene := game.CurrentScene
 		game.Mutex.Unlock()
 
 		if scene != nil {
-			scene.Update(tick)
+			scene.Update()
 		}
 	}
 }

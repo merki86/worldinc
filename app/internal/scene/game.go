@@ -14,7 +14,6 @@ import (
 
 type gameScene struct {
 	game *model.GameState
-	t    *time.Ticker
 }
 
 func NewGameScene(game *model.GameState) *gameScene {
@@ -23,11 +22,10 @@ func NewGameScene(game *model.GameState) *gameScene {
 	}
 }
 
-func (s *gameScene) Update(t *time.Ticker) {
+func (s *gameScene) Update() {
 	s.game.Mutex.Lock()
 	w := &s.game.World
 	logic.DoWorldTick(w)
-	s.t = t
 
 	if w.Infected <= 0 {
 		if w.Healthy <= 0 {
@@ -85,16 +83,16 @@ func (s *gameScene) HandleEvent(ev tcell.Event) {
 				s.game.CurrentScene = NewSymptomsScene(s.game)
 			case "1":
 				s.game.World.Speed = time.Second
-				s.t.Reset(s.game.World.Speed)
+				s.game.Gameticker.Reset(s.game.World.Speed)
 			case "2":
 				s.game.World.Speed = time.Second / 2
-				s.t.Reset(s.game.World.Speed)
+				s.game.Gameticker.Reset(s.game.World.Speed)
 			case "3":
 				s.game.World.Speed = time.Second / 4
-				s.t.Reset(s.game.World.Speed)
+				s.game.Gameticker.Reset(s.game.World.Speed)
 			case "4":
 				s.game.World.Speed = time.Second / 6
-				s.t.Reset(s.game.World.Speed)
+				s.game.Gameticker.Reset(s.game.World.Speed)
 			}
 		}
 		s.game.Mutex.Unlock()

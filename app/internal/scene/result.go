@@ -22,10 +22,10 @@ func NewResultScene(game *model.GameState, isWin bool) *resultScene {
 	}
 }
 
-func (s *resultScene) Update(t *time.Ticker) {
+func (s *resultScene) Update() {
 	if s.game.World.Speed != time.Second {
 		s.game.World.Speed = time.Second
-		t.Reset(s.game.World.Speed)
+		s.game.Gameticker.Reset(s.game.World.Speed)
 	}
 }
 

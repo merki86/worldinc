@@ -10,12 +10,13 @@ import (
 type GameState struct {
 	World        World
 	Symptoms     []Symptom
+	Gameticker   *time.Ticker
 	CurrentScene Scene
 	Mutex        sync.Mutex
 }
 
 type Scene interface {
-	Update(ticker *time.Ticker)
+	Update()
 	Draw(s tcell.Screen)
 	HandleEvent(ev tcell.Event)
 }

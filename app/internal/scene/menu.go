@@ -2,7 +2,6 @@ package scene
 
 import (
 	"os"
-	"time"
 	"worldinc/app/internal/model"
 	"worldinc/app/pkg/print"
 
@@ -19,7 +18,7 @@ func NewMenuScene(game *model.GameState) *menuScene {
 	}
 }
 
-func (s *menuScene) Update(t *time.Ticker) {
+func (s *menuScene) Update() {
 }
 
 func (s *menuScene) Draw(sc tcell.Screen) {
@@ -36,9 +35,13 @@ func (s *menuScene) Draw(sc tcell.Screen) {
 	print.Print(sc, 0, 9, "W   - go up on the Symptoms store")
 	print.Print(sc, 0, 10, "S   - go down on the Symptoms store")
 	print.Print(sc, 0, 11, "E   - buy hovered symptom on the Symptoms store")
-	print.Print(sc, 0, 12, "ESC - quit the game")
+	print.Print(sc, 0, 12, "1   - Tick speed 1s")
+	print.Print(sc, 0, 13, "2   - Tick speed 500ms")
+	print.Print(sc, 0, 14, "3   - Tick speed 250ms")
+	print.Print(sc, 0, 15, "4   - Tick speed 166ms")
+	print.Print(sc, 0, 16, "ESC - quit the game")
 
-	print.Print(sc, 0, 14, "Press ENTER to start! ESC to quit.")
+	print.Print(sc, 0, 18, "Press ENTER to start! ESC to quit.")
 
 	s.game.Mutex.Unlock()
 }
