@@ -13,12 +13,14 @@ import (
 )
 
 type gameScene struct {
-	game *model.GameState
+	game          *model.GameState
+	isTimeFreezed bool
 }
 
 func NewGameScene(game *model.GameState) *gameScene {
 	return &gameScene{
-		game: game,
+		game:          game,
+		isTimeFreezed: false,
 	}
 }
 
@@ -42,6 +44,10 @@ func (s *gameScene) Draw(sc tcell.Screen) {
 	w := &s.game.World
 
 	print.Print(sc, 0, 1, fmt.Sprintf("DAY: %v | Speed: %v | Credit: %v", w.DaysPassed, w.Speed, w.Credit))
+	if s.isTimeFreezed {
+		print.Print(sc, 0, 1, fmt.Sprintf("DAY: %v | Speed: Stopped | Credit: %v", w.DaysPassed, w.Credit))
+	}
+
 	print.Print(sc, 0, 2, "=== World ===")
 	print.Print(sc, 0, 3, fmt.Sprintf("Healthy: %v", w.Healthy))
 	print.Print(sc, 0, 4, fmt.Sprintf("Infected: %v +%v / Dead: %v +%v", w.Infected, w.NewInfected, w.Dead, w.NewDead))
@@ -82,17 +88,24 @@ func (s *gameScene) HandleEvent(ev tcell.Event) {
 			case "a":
 				s.game.CurrentScene = NewSymptomsScene(s.game)
 			case "1":
+				s.isTimeFreezed = false
 				s.game.World.Speed = time.Second
 				s.game.Gameticker.Reset(s.game.World.Speed)
 			case "2":
+				s.isTimeFreezed = false
 				s.game.World.Speed = time.Second / 2
 				s.game.Gameticker.Reset(s.game.World.Speed)
 			case "3":
+				s.isTimeFreezed = false
 				s.game.World.Speed = time.Second / 4
 				s.game.Gameticker.Reset(s.game.World.Speed)
 			case "4":
-				s.game.World.Speed = time.Second / 6
+				s.isTimeFreezed = false
+				s.game.World.Speed = 100 * time.Millisecond
 				s.game.Gameticker.Reset(s.game.World.Speed)
+			case "5":
+				s.isTimeFreezed = true
+				s.game.Gameticker.Stop()
 			}
 		}
 		s.game.Mutex.Unlock()
