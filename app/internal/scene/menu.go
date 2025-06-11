@@ -39,10 +39,10 @@ func (s *menuScene) Draw(sc tcell.Screen) {
 	print.Print(sc, 0, 13, "2   - Tick speed 500ms")
 	print.Print(sc, 0, 14, "3   - Tick speed 250ms")
 	print.Print(sc, 0, 15, "4   - Tick speed 100ms")
-	print.Print(sc, 0, 15, "5   - Stop game tick")
-	print.Print(sc, 0, 16, "ESC - quit the game")
+	print.Print(sc, 0, 16, "5   - Stop game tick")
+	print.Print(sc, 0, 17, "ESC - quit the game")
 
-	print.Print(sc, 0, 18, "Press ENTER to start! ESC to quit.")
+	print.Print(sc, 0, 19, "Press ENTER to start! ESC to quit.")
 
 	s.game.Mutex.Unlock()
 }
