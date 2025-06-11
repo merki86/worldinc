@@ -31,6 +31,8 @@ type World struct {
 	Disease    Disease
 	Regions    []Region
 	DaysPassed int
+
+	Credit int
 }
 
 type Region struct {

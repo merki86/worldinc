@@ -14,6 +14,7 @@ import (
 type symptomsScene struct {
 	game       *model.GameState
 	hovered    int
+	message    string
 	isSelected bool
 }
 
@@ -27,12 +28,16 @@ func NewSymptomsScene(game *model.GameState) *symptomsScene {
 
 func (s *symptomsScene) Update() {
 	s.game.Mutex.Lock()
-	world := &s.game.World
+	w := &s.game.World
 
-	logic.DoWorldTick(world)
+	logic.DoWorldTick(w)
 	if s.isSelected {
-		i := logic.BuySymptom(s.hovered, &s.game.Symptoms)
-		logic.ApplySymptom(i, world)
+		i, err := logic.BuySymptom(s.hovered, s.game)
+		if err != nil {
+			s.message = err.Error()
+		} else {
+			logic.ApplySymptom(i, w)
+		}
 		s.isSelected = false
 	}
 	s.game.Mutex.Unlock()
@@ -40,7 +45,7 @@ func (s *symptomsScene) Update() {
 
 func (s *symptomsScene) Draw(sc tcell.Screen) {
 	s.game.Mutex.Lock()
-	// world := &s.game.World
+	w := &s.game.World
 	symptomsList := &s.game.Symptoms
 
 	print.Print(sc, 0, 1, "=== Symptoms store ===")
@@ -58,8 +63,12 @@ func (s *symptomsScene) Draw(sc tcell.Screen) {
 		row += 2
 	}
 
+	print.Print(sc, 0, row, fmt.Sprintf("Credit: %v", w.Credit))
 	if s.isSelected {
 		print.Print(sc, 0, row, fmt.Sprintf("Buying...: %v. %v", s.hovered, s.game.Symptoms[s.hovered-1].Name))
+	}
+	if s.message != "" {
+		print.Print(sc, 0, row, fmt.Sprintf("Error: %v", s.message))
 	}
 	s.game.Mutex.Unlock()
 }
@@ -79,16 +88,19 @@ func (s *symptomsScene) HandleEvent(ev tcell.Event) {
 				if s.hovered > 1 {
 					s.hovered -= 1
 					s.isSelected = false
+					s.message = ""
 				}
 			case "s":
 				if s.hovered < len(s.game.Symptoms) {
 					s.hovered += 1
 					s.isSelected = false
+					s.message = ""
 				}
 			case "e":
 				if s.hovered > 0 && s.hovered <= len((*s).game.Symptoms) {
 					if (*s).game.Symptoms[s.hovered-1].Unlocked {
 						s.isSelected = false
+						s.message = "The item is already bought"
 					} else {
 						s.isSelected = !s.isSelected
 					}

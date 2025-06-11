@@ -18,6 +18,7 @@ func DoWorldTick(w *model.World) {
 	w.NewInfected = th
 	w.Infected += w.NewInfected
 	w.Healthy -= w.NewInfected
+	w.Credit += w.NewInfected
 
 	if w.Healthy <= 0 {
 		w.NewInfected = w.Healthy + w.NewInfected
@@ -28,11 +29,17 @@ func DoWorldTick(w *model.World) {
 		w.NewDead = mi
 		w.Dead += w.NewDead
 		w.Infected -= w.NewDead
+		w.Credit += w.NewDead
 
 		if w.Infected <= 0 {
 			w.NewDead = w.Infected + w.NewDead
 			w.Infected = 0
 		}
+	}
+
+	// +1 credt every 5 days
+	if w.DaysPassed%5 == 0 {
+		w.Credit += 1
 	}
 
 	// fmt.Printf("%v. H: %v I: %v [%v] D: %v [%v]  ", w.DaysPassed, w.Healthy, w.Infected, w.NewInfected, w.Dead, w.NewDead)

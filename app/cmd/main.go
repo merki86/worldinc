@@ -18,7 +18,7 @@ var SymptomsList = []model.Symptom{
 		MortalityBonus:    1.4,
 		TransmissionBonus: 0.001,
 		Cost:              5,
-		Unlocked:          true,
+		Unlocked:          false,
 	},
 	{
 		ID:                2,
@@ -26,7 +26,7 @@ var SymptomsList = []model.Symptom{
 		MortalityBonus:    1,
 		TransmissionBonus: 0.001,
 		Cost:              5,
-		Unlocked:          true,
+		Unlocked:          false,
 	},
 	{
 		ID:                3,
@@ -49,7 +49,7 @@ var SymptomsList = []model.Symptom{
 		Name:              "Fever",
 		MortalityBonus:    0.05,
 		TransmissionBonus: 0.002,
-		Cost:              5,
+		Cost:              10,
 		Unlocked:          false,
 	},
 }
@@ -62,8 +62,8 @@ var game = model.GameState{
 		Dead:     0,
 		Disease: model.Disease{
 			Name:         "Bacteria",
-			Mortality:    1.4,
-			Transmission: 0.001,
+			Mortality:    0,
+			Transmission: 0,
 			Discovered:   false,
 		},
 		Regions: []model.Region{
@@ -77,6 +77,7 @@ var game = model.GameState{
 			},
 		},
 		DaysPassed: 0,
+		Credit:     5,
 	},
 	Symptoms: SymptomsList,
 }

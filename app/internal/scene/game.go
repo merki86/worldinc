@@ -23,28 +23,29 @@ func NewGameScene(game *model.GameState) *gameScene {
 
 func (s *gameScene) Update() {
 	s.game.Mutex.Lock()
-	world := &s.game.World
-	logic.DoWorldTick(world)
+	w := &s.game.World
+	logic.DoWorldTick(w)
 	s.game.Mutex.Unlock()
 }
 
 func (s *gameScene) Draw(sc tcell.Screen) {
 	s.game.Mutex.Lock()
-	world := &s.game.World
+	w := &s.game.World
 
-	print.Print(sc, 0, 1, fmt.Sprintf("DAY: %v === World ===", world.DaysPassed))
-	print.Print(sc, 0, 2, fmt.Sprintf("Healthy: %v", world.Healthy))
-	print.Print(sc, 0, 3, fmt.Sprintf("Infected: %v +%v / Dead: %v +%v", world.Infected, world.NewInfected, world.Dead, world.NewDead))
+	print.Print(sc, 0, 1, fmt.Sprintf("DAY: %v | Credit: %v", w.DaysPassed, w.Credit))
+	print.Print(sc, 0, 2, "=== World ===")
+	print.Print(sc, 0, 3, fmt.Sprintf("Healthy: %v", w.Healthy))
+	print.Print(sc, 0, 4, fmt.Sprintf("Infected: %v +%v / Dead: %v +%v", w.Infected, w.NewInfected, w.Dead, w.NewDead))
 
-	print.Print(sc, 0, 4, "=== Disease ===")
-	print.Print(sc, 0, 5, fmt.Sprintf("Name: %v", world.Disease.Name))
-	print.Print(sc, 0, 6, fmt.Sprintf("Mortality: %v", world.Disease.Mortality))
-	print.Print(sc, 0, 7, fmt.Sprintf("Transmission: %v", world.Disease.Transmission))
-	print.Print(sc, 0, 8, fmt.Sprintf("Discovered: %v", world.Disease.Discovered))
+	print.Print(sc, 0, 5, "=== Disease ===")
+	print.Print(sc, 0, 6, fmt.Sprintf("Name: %v", w.Disease.Name))
+	print.Print(sc, 0, 7, fmt.Sprintf("Mortality: %v", w.Disease.Mortality))
+	print.Print(sc, 0, 8, fmt.Sprintf("Transmission: %v", w.Disease.Transmission))
+	print.Print(sc, 0, 9, fmt.Sprintf("Discovered: %v", w.Disease.Discovered))
 
-	print.Print(sc, 0, 9, "=== Regions ===")
-	row := 10
-	for i, v := range world.Regions {
+	print.Print(sc, 0, 10, "=== Regions ===")
+	row := 11
+	for i, v := range w.Regions {
 		print.Print(sc, 0, row, fmt.Sprintf("%v. %v", i+1, v.Name))
 		print.Print(sc, 0, row+1, fmt.Sprintf("   Population: %v", v.Population))
 		print.Print(sc, 0, row+2, fmt.Sprintf("   Infected: %v / Dead: %v", v.Infected, v.Dead))
